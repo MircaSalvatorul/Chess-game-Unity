@@ -35,6 +35,41 @@ public class GameScript : MonoBehaviour
             Create("blackPawn",3,6),Create("blackPawn",4,6),Create("blackPawn",5,6),
             Create("blackPawn",6,6),Create("blackPawn",7,6)
         };
-        Instantiate(chesspiece, new Vector3(0,0,-1), Quaternion.identity);
+
+        //Set all pieces on board
+        for(int i = 0; i < playerWhite.Length; i++)
+        {
+            SetPosition(playerWhite[i]);
+            SetPosition(playerBlack[i]);
+        }
+    }
+
+    public GameObject Create(string name, int x, int y)
+    {
+        GameObject obj = Instantiate(chesspiece, new Vector3(x, y, 0), Quaternion.identity);
+        if (obj == null)
+        {
+            Debug.LogError("Failed to instantiate chesspiece.");
+            return null;
+        }
+
+        Chessman cm = obj.GetComponent<Chessman>();
+        if (cm == null)
+        {
+            Debug.LogError("The instantiated chesspiece is missing the Chessman component.");
+            return null;
+        }
+
+        cm.name = name;
+        cm.SetXboard(x);
+        cm.SetYboard(y);
+        cm.Activate(); //Activates the code in Chessman.cs
+        return obj;
+    }
+
+    public void SetPosition(GameObject obj)
+    {
+        Chessman cm = obj.GetComponent<Chessman>();
+        positions[cm.GetXboard(), cm.GetYboard()] = obj;
     }
 }

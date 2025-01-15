@@ -1,4 +1,4 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -71,15 +71,36 @@ public class Chessman : MonoBehaviour
 
     public void SetCoords()
     {
-        float x = xBoard;
-        float y = yBoard;
+        // Dimensiunea unui pătrat al tablei
+        float squareSize = 1.0f; 
 
-        x *= 0.66f;
-        y *= 0.66f;
+        // Offset pentru centrul tablei
+        float boardOffsetX = -3.5f; 
+        float boardOffsetY = -3.5f;
 
-        x += -2.5f;
-        y += -2.5f;
+        float x = xBoard * squareSize + boardOffsetX;
+        float y = yBoard * squareSize + boardOffsetY;
 
         this.transform.position = new Vector3(x, y, -1.0f);
+    }
+
+
+    public int GetXboard()
+    {
+        return xBoard;
+    }
+
+    public int GetYboard() {
+        return yBoard;
+    }
+
+    public void SetXboard(int x)
+    {
+        xBoard = x;
+    }
+
+    public void SetYboard(int y)
+    {
+        yBoard = y;
     }
 }
