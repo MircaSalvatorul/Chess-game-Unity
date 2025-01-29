@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 4530840857677615158}
   - component: {fileID: 1881296197760276220}
   - component: {fileID: 832898679616132228}
+  - component: {fileID: 643096523309972765}
   m_Layer: 0
   m_Name: ChessPiece
   m_TagString: Untagged
@@ -101,7 +102,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   controller: {fileID: 0}
-  movePlate: {fileID: 0}
+  movePlate: {fileID: 6908968842634281996, guid: 8b2c90a177fce854c898e023603be2a1, type: 3}
   player: 
   blackQueen: {fileID: 21300000, guid: 6ba96f9cf8e79b443a7c42a326bf4b2c, type: 3}
   blackKnight: {fileID: 21300000, guid: 98d6413a73b0d704aa0667d9cbefeeeb, type: 3}
@@ -115,3 +116,49 @@ MonoBehaviour:
   whiteKing: {fileID: 21300000, guid: 926e3a1dc056e0f4c8c830dbbc2efe7e, type: 3}
   whiteRook: {fileID: 21300000, guid: 6d3df8a1b7a8138499f7e1b89ee91eec, type: 3}
   whitePawn: {fileID: 21300000, guid: c606c61603708854ba9f403d52bc854f, type: 3}
+--- !u!61 &643096523309972765
+BoxCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5368286701782584280}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_ForceSendLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ForceReceiveLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ContactCaptureLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_CallbackLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_IsTrigger: 0
+  m_UsedByEffector: 0
+  m_CompositeOperation: 0
+  m_CompositeOrder: 0
+  m_Offset: {x: 0, y: 0}
+  m_SpriteTilingProperty:
+    border: {x: 0, y: 0, z: 0, w: 0}
+    pivot: {x: 0.5, y: 0.5}
+    oldSize: {x: 0.2, y: 0.2}
+    newSize: {x: 0.2, y: 0.2}
+    adaptiveTilingThreshold: 0.5
+    drawMode: 0
+    adaptiveTiling: 0
+  m_AutoTiling: 0
+  m_Size: {x: 0.2, y: 0.2}
+  m_EdgeRadius: 0

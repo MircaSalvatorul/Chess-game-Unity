@@ -30,41 +30,52 @@ public class Chessman : MonoBehaviour
 
         switch (this.name)
         {
-                case "blackQueen":
+            case "blackQueen":
                 this.GetComponent<SpriteRenderer>().sprite = blackQueen;
+                player = "black";
                 break;
             case "blackKnight":
                 this.GetComponent<SpriteRenderer>().sprite = blackKnight;
+                player = "black";
                 break;
             case "blackBishop":
                 this.GetComponent<SpriteRenderer>().sprite = blackBishop;
+                player = "black";
                 break;
             case "blackKing":
                 this.GetComponent<SpriteRenderer>().sprite = blackKing;
+                player = "black";
                 break;
             case "blackRook":
                 this.GetComponent<SpriteRenderer>().sprite = blackRook;
+                player = "black";
                 break;
             case "blackPawn":
                 this.GetComponent<SpriteRenderer>().sprite = blackPawn;
+                player = "black";
                 break;
             case "whiteQueen":
                 this.GetComponent<SpriteRenderer>().sprite = whiteQueen;
+                player = "white";
                 break;
             case "whiteKnight":
                 this.GetComponent<SpriteRenderer>().sprite = whiteKnight;
                 break;
             case "whiteBishop":
                 this.GetComponent<SpriteRenderer>().sprite = whiteBishop;
+                player = "white";
                 break;
             case "whiteKing":
                 this.GetComponent<SpriteRenderer>().sprite = whiteKing;
+                player = "white";
                 break;
             case "whiteRook":
                 this.GetComponent<SpriteRenderer>().sprite = whiteRook;
+                player = "white";
                 break;
             case "whitePawn":
                 this.GetComponent<SpriteRenderer>().sprite = whitePawn;
+                player = "white";
                 break;
         }
     }
@@ -164,11 +175,129 @@ public class Chessman : MonoBehaviour
                 PawnMovePlate(xBoard, yBoard - 1);
                 break;
             case "whitePawn":
-                PawnMovePlate(-1);
-                break;
-            case "whitePawn":
                 PawnMovePlate(xBoard, yBoard + 1);
                 break;
         }
+    }
+
+    public void LineMovePlate(int xIncrement, int yIncrement)
+    {
+        GameScript sc = controller.GetComponent<GameScript>();
+
+        int x = xBoard + xIncrement;
+        int y = yBoard + yIncrement;
+
+        while (sc.PositionOnBoard(x,y) && sc.GetPosition(x, y) == null)
+        {
+            MovePlateSpawn(x, y);
+            x += xIncrement;
+            y += yIncrement;
+        }
+
+
+        if (sc.PositionOnBoard(x, y) && sc.GetPosition(x, y).GetComponent<Chessman>().player != player)
+        {
+            MovePlateAttackSpawn(x, y);
+        }
+    }
+
+    public void LMovePlate()
+    {
+        PointMovePlate(xBoard + 1, yBoard + 2);
+        PointMovePlate(xBoard - 1, yBoard + 2);
+        PointMovePlate(xBoard + 2, yBoard + 1);
+        PointMovePlate(xBoard + 2, yBoard - 1);
+        PointMovePlate(xBoard + 1, yBoard - 2);
+        PointMovePlate(xBoard - 1, yBoard - 2);
+        PointMovePlate(xBoard - 2, yBoard + 1);
+        PointMovePlate(xBoard - 2, yBoard - 1);
+        //again, 8 directions... really gotta find a better
+        //way than 8 calls. this just feels lazy
+    }
+
+    public void SurroundMovePlate()
+    {
+        PointMovePlate(xBoard, yBoard + 1);
+        PointMovePlate(xBoard, yBoard - 1);
+        PointMovePlate(xBoard - 1, yBoard - 1);
+        PointMovePlate(xBoard - 1, yBoard);
+        PointMovePlate(xBoard - 1, yBoard + 1);
+        PointMovePlate(xBoard + 1, yBoard - 1);
+        PointMovePlate(xBoard + 1, yBoard);
+        PointMovePlate(xBoard + 1, yBoard + 1);
+    }
+
+    public void PointMovePlate(int x, int y)
+    {
+        GameScript sc = controller.GetComponent<GameScript>();
+        if (sc.PositionOnBoard(x, y))
+        {
+            GameObject cp = sc.GetPosition(x, y);
+
+            if (cp == null)
+            {
+                MovePlateSpawn(x, y);
+            }
+            else if (cp.GetComponent<Chessman>().player != player)
+            {
+                MovePlateAttackSpawn(x, y);
+            }
+        }
+    }
+
+    public void PawnMovePlate(int x, int y)
+    {
+        GameScript sc = controller.GetComponent<GameScript>();
+
+        if (sc.PositionOnBoard(x, y))
+        {
+            GameObject cp = sc.GetPosition(x, y);
+
+            if (cp == null)
+            {
+                MovePlateSpawn(x, y);
+            }
+
+            if (sc.PositionOnBoard(x + 1, y) && sc.GetPosition(x + 1, y) != null && sc.GetPosition(x + 1, y).GetComponent<Chessman>().player != player)
+            {
+                MovePlateAttackSpawn(x + 1, y);
+            }
+
+            if (sc.PositionOnBoard(x - 1, y) && sc.GetPosition(x - 1, y) != null && sc.GetPosition(x - 1, y).GetComponent<Chessman>().player != player)
+            {
+                MovePlateAttackSpawn(x - 1, y);
+            }
+        }
+    }
+
+    public void MovePlateSpawn(int matrixX, int matrixY)
+    {
+        float x = matrixX;
+        float y = matrixY;
+        
+        x += -3.5f;
+        y += -3.5f;
+
+        GameObject mp = Instantiate(movePlate, new Vector3(x, y, -3.0f), Quaternion.identity);
+
+        MovePlate mpScript = mp.GetComponent<MovePlate>();
+        mpScript.SetReference(gameObject);
+        mpScript.SetCoords(matrixX, matrixY);
+    }
+
+    public void MovePlateAttackSpawn(int matrixX, int matrixY)
+    {
+        float x = matrixX;
+        float y = matrixY;
+
+        x += -3.5f;
+        y += -3.5f;
+
+        GameObject mp = Instantiate(movePlate, new Vector3(x, y, -3.0f), Quaternion.identity);
+
+        MovePlate mpScript = mp.GetComponent<MovePlate>();
+        mpScript.attack = true;
+        mpScript.SetReference(gameObject);
+        mpScript.SetCoords(matrixX, matrixY);
     }
 }
