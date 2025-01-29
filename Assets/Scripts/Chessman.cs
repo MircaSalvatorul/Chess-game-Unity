@@ -103,4 +103,72 @@ public class Chessman : MonoBehaviour
     {
         yBoard = y;
     }
+
+    private void OnMouseUp()
+    {
+        DestroyMovePlates();
+
+        InitiatesMovePlates();
+    } 
+
+    public void DestroyMovePlates()
+    {
+        GameObject[] movePlates = GameObject.FindGameObjectsWithTag("MovePlate");
+
+        for (int i = 0; i < movePlates.Length; i++)
+        {
+            Destroy(movePlates[i]);
+        }
+    }
+
+    public void InitiatesMovePlates()
+    {
+        switch (this.name)
+        {
+            case "blackQueen":
+            case "whiteQueen":
+                //one function for each direction
+                //which means a total of 8
+                LineMovePlate(1, 0);
+                LineMovePlate(0, 1);
+                LineMovePlate(1, 1);
+                LineMovePlate(-1, 0);
+                LineMovePlate(0, -1);
+                LineMovePlate(-1, -1);
+                LineMovePlate(-1, 1);
+                LineMovePlate(1, -1);
+                break;
+            case "blackKnight":
+            case "whiteKnight":
+                LMovePlate();
+                break;
+            case "blackBishop":
+            case "whiteBishop":
+                LineMovePlate(1, 1);
+                LineMovePlate(-1, 1);
+                LineMovePlate(1, -1);
+                LineMovePlate(-1, -1);
+                break;
+            case "blackKing":
+            case "whiteKing":
+                SurroundMovePlate();
+                break;
+            case "blackRook":
+            case "whiteRook":
+                LineMovePlate(1, 0);
+                LineMovePlate(0, 1);
+                LineMovePlate(-1, 0);
+                LineMovePlate(0, -1);
+                break;
+            case "blackPawn":
+                PawnMovePlate(xBoard, yBoard - 1);
+                break;
+            case "whitePawn":
+                PawnMovePlate(-1);
+                break;
+            case "whitePawn":
+                PawnMovePlate(xBoard, yBoard + 1);
+                break;
+        }
+    }
 }
