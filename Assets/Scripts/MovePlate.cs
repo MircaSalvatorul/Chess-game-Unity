@@ -43,8 +43,8 @@ public class MovePlate : MonoBehaviour
 
         reference.GetComponent<Chessman>().DestroyMovePlates();
 
-        // 🔹 Apelăm metoda de mutare din GameScript
-        Debug.Log("Apelăm MovePiece() în GameScript...");
+        controller.GetComponent<GameScript>().nextTurn();
+
         controller.GetComponent<GameScript>().MovePiece(reference, matrixX, matrixY);
     }
 

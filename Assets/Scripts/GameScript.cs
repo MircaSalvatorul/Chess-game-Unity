@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class GameScript : MonoBehaviour
 {
@@ -71,6 +72,30 @@ public class GameScript : MonoBehaviour
         return obj;
     }
 
+    // 🔹 Mutare piesă + clonare automată a tablei după mutare
+    public void MovePiece(GameObject piece, int newX, int newY)
+    {
+        Debug.Log("Mutare efectuată, clonăm tabla!");
+
+        // Mutarea piesei
+        SetPositionEmpty(piece.GetComponent<Chessman>().GetXboard(), piece.GetComponent<Chessman>().GetYboard());
+        piece.GetComponent<Chessman>().SetXboard(newX);
+        piece.GetComponent<Chessman>().SetYboard(newY);
+        piece.GetComponent<Chessman>().SetCoords();
+        SetPosition(piece);
+
+        // După mutare, clonăm tabla
+        if (boardCloner != null)
+        {
+            Debug.Log("Apelăm CloneBoardFromGame...");
+            boardCloner.CloneBoardFromGame(this);
+        }
+        else
+        {
+            Debug.LogError("BoardCloner NU este asignat!");
+        }
+    }
+
     public void SetPosition(GameObject obj)
     {
         Chessman cm = obj.GetComponent<Chessman>();
@@ -99,27 +124,32 @@ public class GameScript : MonoBehaviour
         return positions; // Returnează starea curentă a tablei
     }
 
-    // 🔹 Mutare piesă + clonare automată a tablei după mutare
-    public void MovePiece(GameObject piece, int newX, int newY)
+    public string getCurrentPlayer()
     {
-        Debug.Log("Mutare efectuată, clonăm tabla!");
+        return currentPlayer;
+    }
 
-        // Mutarea piesei
-        SetPositionEmpty(piece.GetComponent<Chessman>().GetXboard(), piece.GetComponent<Chessman>().GetYboard());
-        piece.GetComponent<Chessman>().SetXboard(newX);
-        piece.GetComponent<Chessman>().SetYboard(newY);
-        piece.GetComponent<Chessman>().SetCoords();
-        SetPosition(piece);
+    public bool isGameOver()
+    {
+        return gameOver;
+    }
 
-        // După mutare, clonăm tabla
-        if (boardCloner != null)
-        {
-            Debug.Log("Apelăm CloneBoardFromGame...");
-            boardCloner.CloneBoardFromGame(this);
-        }
+    public void nextTurn()
+    {
+
+       if (currentPlayer == "white")
+            currentPlayer = "black";
         else
+            currentPlayer = "white";
+    }
+
+    public void Update()
+    {
+        if(gameOver == true && Input.GetMouseButtonDown(0))
         {
-            Debug.LogError("BoardCloner NU este asignat!");
+            gameOver = false;
+
+            SceneManager.LoadScene("Game");
         }
     }
 }
