@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 
 public class MovePlate : MonoBehaviour
 {
@@ -23,6 +23,7 @@ public class MovePlate : MonoBehaviour
 
     public void OnMouseUp()
     {
+        Debug.Log("Piesa selectată pentru mutare!");
         controller = GameObject.FindGameObjectWithTag("GameController");
 
         if (attack)
@@ -41,6 +42,10 @@ public class MovePlate : MonoBehaviour
         controller.GetComponent<GameScript>().SetPosition(reference);
 
         reference.GetComponent<Chessman>().DestroyMovePlates();
+
+        // 🔹 Apelăm metoda de mutare din GameScript
+        Debug.Log("Apelăm MovePiece() în GameScript...");
+        controller.GetComponent<GameScript>().MovePiece(reference, matrixX, matrixY);
     }
 
     public void SetCoords(int x, int y)

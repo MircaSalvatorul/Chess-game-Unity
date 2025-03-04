@@ -1,10 +1,11 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class GameScript : MonoBehaviour
 {
     public GameObject chesspiece;
+    private BoardCloner boardCloner; // Referință la scriptul BoardCloner
 
     //Positions and team for each piece
     private GameObject[,] positions = new GameObject[8, 8];
@@ -17,6 +18,8 @@ public class GameScript : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        boardCloner = FindObjectOfType<BoardCloner>(); // Găsește componenta în scenă
+
         playerWhite = new GameObject[]
         {
             Create("whiteRook",0,0),Create("whiteKnight",1,0), Create("whiteBishop",2,0),
@@ -26,6 +29,7 @@ public class GameScript : MonoBehaviour
             Create("whitePawn",3,1),Create("whitePawn",4,1),Create("whitePawn",5,1),
             Create("whitePawn",6,1),Create("whitePawn",7,1)
         };
+
         playerBlack = new GameObject[]
         {
             Create("blackRook",0,7),Create("blackKnight",1,7), Create("blackBishop",2,7),
@@ -36,7 +40,7 @@ public class GameScript : MonoBehaviour
             Create("blackPawn",6,6),Create("blackPawn",7,6)
         };
 
-        //Set all pieces on board
+        // Set all pieces on board
         for (int i = 0; i < playerWhite.Length; i++)
         {
             SetPosition(playerWhite[i]);
@@ -63,7 +67,7 @@ public class GameScript : MonoBehaviour
         cm.name = name;
         cm.SetXboard(x);
         cm.SetYboard(y);
-        cm.Activate(); //Activates the code in Chessman.cs
+        cm.Activate(); // Activates the code in Chessman.cs
         return obj;
     }
 
@@ -88,5 +92,34 @@ public class GameScript : MonoBehaviour
         if (x < 0 || y < 0 || x >= positions.GetLength(0) || y >= positions.GetLength(1))
             return false;
         return true;
+    }
+
+    public GameObject[,] GetBoardState()
+    {
+        return positions; // Returnează starea curentă a tablei
+    }
+
+    // 🔹 Mutare piesă + clonare automată a tablei după mutare
+    public void MovePiece(GameObject piece, int newX, int newY)
+    {
+        Debug.Log("Mutare efectuată, clonăm tabla!");
+
+        // Mutarea piesei
+        SetPositionEmpty(piece.GetComponent<Chessman>().GetXboard(), piece.GetComponent<Chessman>().GetYboard());
+        piece.GetComponent<Chessman>().SetXboard(newX);
+        piece.GetComponent<Chessman>().SetYboard(newY);
+        piece.GetComponent<Chessman>().SetCoords();
+        SetPosition(piece);
+
+        // După mutare, clonăm tabla
+        if (boardCloner != null)
+        {
+            Debug.Log("Apelăm CloneBoardFromGame...");
+            boardCloner.CloneBoardFromGame(this);
+        }
+        else
+        {
+            Debug.LogError("BoardCloner NU este asignat!");
+        }
     }
 }
